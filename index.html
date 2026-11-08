@@ -590,6 +590,16 @@ footer .credit{margin-top:1.6rem;font-size:.7rem;color:rgba(248,242,231,.4);lett
     if(!name){ document.getElementById('name').focus(); return; }
     if(!attending){ alert('Please let us know if you can join us.'); return; }
     if(!ack){ alert('Please confirm you understand the adults-only note.'); return; }
+    // Send responses to the couple's Google Form
+    var GFORM='https://docs.google.com/forms/d/e/1FAIpQLSf0NKy5-Ng8UWu1OJacKKgWvOIj3l3wUhAvJoey-N-R9ov2Qg/formResponse';
+    var party=form.querySelector('input[name=party]:checked');
+    var note=document.getElementById('note').value.trim();
+    var gdata=new URLSearchParams();
+    gdata.append('entry.990736107', name);
+    gdata.append('entry.1435412264', attending.value);
+    if(party) gdata.append('entry.954262161', party.value);
+    if(note) gdata.append('entry.603434241', note);
+    fetch(GFORM,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:gdata.toString()}).catch(function(){});
     var msg = attending.value.indexOf('Joyfully')===0
       ? 'Your reply has been noted — we can&rsquo;t wait to celebrate with you, '+name.split(' ')[0]+'!'
       : 'Thank you for letting us know, '+name.split(' ')[0]+'. You&rsquo;ll be missed, and you&rsquo;re in our hearts.';
